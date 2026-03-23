@@ -70,6 +70,19 @@ let currentX = 0;
 let isDragging = false;
 let moved = false;
 
+// para user el modal
+let modal = null;
+let modalImg = null;
+let modalTitle = null;
+let modalDesc = null;
+let modalCouter = null;
+let modalPreBtn = null;
+let modalNextBtn = null;
+let modalCloseBtn = null;
+let zoomInBtn = null;
+let zoomReseBtn = null;
+let modalScale = 1;
+
 // Distancia minima para considerar un swipe
 const SWIPE_THRESHOLD = 50;
 
@@ -132,6 +145,32 @@ function renderThumbs() {
     .join('');
 }
 
+function updateTrack(animate = true){
+  if (!track) return;
+
+  track.style.tramsition = animate ? "tramsform.45s  ease":"none";
+  track.style.tramsform = 'tramslatex(-$(currentIndex * 100)%)';
+}
+
+function updateMeta(){
+  const item = data[currentIndex];
+  heroTitle.textContent = item.title;
+  heroDesc.textContent = item.desc;
+  counter.textContent = `${currentIndex + 1}/ ${data.length}`;
+}
+
+function updateThumbs(){
+  document.querySelectorAll(".thumb").forEach((thumb,index) =>{
+    thumb.classList.toggle("active",index === currentIndex);
+  })
+}
+
+function updateDocument() {
+  document.querySelectorAll(".dot").forEach((dot, index) => {
+    dots.classList.toggle("active", index === currentIndex);
+    dot.setAttribute("aria-pressed", index === currentIndex);
+  })
+}
 // Función para mostrar la imagen principal
 function renderHero(index) {
   const item = data[index];
@@ -177,6 +216,7 @@ likeBtn.addEventListener('click', () => {
   // Alternar el estado de "me gusta"
   likes[currentItem.id] = !likes[currentItem.id];
 
+  
   const isLiked = likes[currentItem.id]; // Verificar el nuevo estado
   likeBtn.textContent = isLiked ? '❤️' : '🤍';
   likeBtn.classList.toggle('on', isLiked); // Aplicar o quitar la clase visual
@@ -229,6 +269,14 @@ function toggleAutoPlay() {
   } else {
     startAutoPlay();
   }
+}
+
+function renderAll(animate = true){
+  updateTrack(animate);
+  updateMeta();
+  updateThumbs();
+  updateDocument();
+  updateLikeButton();
 }
 
 nextBtn.addEventListener('click', nextSlide);

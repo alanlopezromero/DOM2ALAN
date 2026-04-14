@@ -6,6 +6,7 @@
   <title>Galería Dinámica</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <header class="top">
     <h1>Galería Dinámica</h1>
@@ -13,13 +14,18 @@
   </header>
 
   <main class="layout">
+
+    <!-- VISOR PRINCIPAL -->
     <section class="viewer" aria-label="Visor principal">
+
       <div class="frame">
         <img id="heroImg" alt="Imagen principal" />
+
         <button id="likeBtn" class="like" type="button" aria-pressed="false">♡</button>
+
         <div class="controls">
-          <button id="prevBtn"  type="button" >←</button>
-          <button id="nextBtn"  type="button" >→</button>
+          <button id="prevBtn" type="button">←</button>
+          <button id="nextBtn" type="button">→</button>
           <button id="playBtn" type="button">▶</button>
         </div>
       </div>
@@ -29,19 +35,23 @@
           <h2 id="heroTitle">—</h2>
           <p id="heroDesc" class="muted">—</p>
         </div>
+
         <div class="pill">
           <span id="counter">0 / 0</span>
         </div>
       </div>
+
+      <!-- 🔥 MINIATURAS DEBAJO -->
+      <div class="strip">
+        <div id="thumbs" class="thumbs"></div>
+      </div>
+
     </section>
 
-    <aside class="strip" aria-label="Miniaturas">
-      <div id="thumbs" class="thumbs"></div>
-    </aside>
   </main>
 
   <footer class="bottom muted">
-    Teclas: ← → para navegar (se agrega en sesión 2)
+    Teclas: ← → para navegar
   </footer>
 
   <script src="app.js"></script>

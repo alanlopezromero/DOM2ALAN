@@ -70,21 +70,24 @@ let currentX = 0;
 let isDragging = false;
 let moved = false;
 
-// para user el modal
+// Distancia minima para considerar un swipe
+const SWIPE_THRESHOLD = 50;
+
+// Usar el modal
 let modal = null;
 let modalImg = null;
 let modalTitle = null;
 let modalDesc = null;
-let modalCouter = null;
-let modalPreBtn = null;
+let modalCounter = null;
+let modalPrevBtn = null;
 let modalNextBtn = null;
 let modalCloseBtn = null;
 let zoomInBtn = null;
-let zoomReseBtn = null;
+let zoomOutBtn = null;
+let zoomResetBtn = null;
 let modalScale = 1;
 
-// Distancia minima para considerar un swipe
-const SWIPE_THRESHOLD = 50;
+
 
 // Crear un track del carrusel
 // Crea un contenedor .track que tendrá todas las imágenes
@@ -131,6 +134,38 @@ function createDots() {
     .join('');
 }
 
+function updateTrack (animate = true){
+  if (!track) return;
+
+  track.style.transition = animate ? "transform .45s ease" : "none";
+  track.style.transform = `traslateX(-${currentIndex * 100}%)`;
+}
+
+function updateMeta(){
+  const item = data [currentIndex];
+  heroTitle.textContent = item.title;
+  heroDesc.textContent = item.desc;
+  counter.textContent = `${curretnIndex + 1}/ ${data.lenght}`;
+}
+
+function updateThumb(){
+  document.querySelectorAll(".thumb").forEach((thumb, index) => {
+    thumb.classList.toggle("active", index === currentIndex);
+  })
+}
+
+function updateDocument() {
+  document.querySelectorAll(".dot").forEach((dot, index) => {
+    dots.classList.toggle("active", index === currentIndex);
+    dot.setAttribute("aria-pressed", index === currentIndex);
+  })
+}
+
+function updateDots () {
+  document.querySelectorAll(".dot").forEach
+}
+
+
 // Renderizar las miniaturas
 function renderThumbs() {
   thumbs.innerHTML = data
@@ -145,32 +180,6 @@ function renderThumbs() {
     .join('');
 }
 
-function updateTrack(animate = true){
-  if (!track) return;
-
-  track.style.tramsition = animate ? "tramsform.45s  ease":"none";
-  track.style.tramsform = 'tramslatex(-$(currentIndex * 100)%)';
-}
-
-function updateMeta(){
-  const item = data[currentIndex];
-  heroTitle.textContent = item.title;
-  heroDesc.textContent = item.desc;
-  counter.textContent = `${currentIndex + 1}/ ${data.length}`;
-}
-
-function updateThumbs(){
-  document.querySelectorAll(".thumb").forEach((thumb,index) =>{
-    thumb.classList.toggle("active",index === currentIndex);
-  })
-}
-
-function updateDocument() {
-  document.querySelectorAll(".dot").forEach((dot, index) => {
-    dots.classList.toggle("active", index === currentIndex);
-    dot.setAttribute("aria-pressed", index === currentIndex);
-  })
-}
 // Función para mostrar la imagen principal
 function renderHero(index) {
   const item = data[index];
@@ -210,17 +219,14 @@ thumbs.addEventListener('click', (e) => {
   renderHero(currentIndex); // Renderizar la imagen principal con el nuevo índice
 });
 
-// Listener para el botón de "me gusta"
 likeBtn.addEventListener('click', () => {
   const currentItem = data[currentIndex];
-  // Alternar el estado de "me gusta"
+
+  // Alternar estado like
   likes[currentItem.id] = !likes[currentItem.id];
 
-  
-  const isLiked = likes[currentItem.id]; // Verificar el nuevo estado
-  likeBtn.textContent = isLiked ? '❤️' : '🤍';
-  likeBtn.classList.toggle('on', isLiked); // Aplicar o quitar la clase visual
-  likeBtn.setAttribute('aria-pressed', isLiked); // Actualizar el atributo ARIA
+  // actualizar UI inmediatamente
+  renderHero(currentIndex);
 });
 
 // Cambiar el botón de "play" a "pause"
@@ -271,11 +277,11 @@ function toggleAutoPlay() {
   }
 }
 
-function renderAll(animate = true){
+function renderAll (animate = true) {
   updateTrack(animate);
   updateMeta();
   updateThumbs();
-  updateDocument();
+  updateDots();
   updateLikeButton();
 }
 
@@ -290,6 +296,8 @@ document.addEventListener('keydown', (e) => {
     prevSlide();
   }
 });
+
+
 
 renderThumbs(); // Llamar a la función para mostrar las miniaturas
 renderHero(currentIndex); // Mostrar la imagen inicial
